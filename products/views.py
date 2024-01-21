@@ -3,8 +3,10 @@ from django.shortcuts import render, get_list_or_404
 
 from products.models import Products
 
-def catalog(request, category_slug, page=1):
+def catalog(request, category_slug):
     """For displaying all products"""
+    
+    page = request.GET.get('page', 1)
 
     if category_slug == 'all':
         products = Products.objects.all() # get all prod from bd 'products'
@@ -12,7 +14,7 @@ def catalog(request, category_slug, page=1):
         products = get_list_or_404(Products.objects.filter(category__slug=category_slug))
         
     paginator = Paginator(products, per_page=3)
-    current_page = paginator.page(page)
+    current_page = paginator.page(int(page))
 
     context = {
         "title": "Home - Каталог",
