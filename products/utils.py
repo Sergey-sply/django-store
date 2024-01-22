@@ -10,8 +10,8 @@ def q_search(query):
         return Products.objects.filter(id=int(query))
 
     vector = SearchVector("name", "description")
-    query = SearchQuery("cheese")
-    
+    query = SearchQuery(query)
+
     return Products.objects.annotate(rank=SearchRank(vector, query)).order_by("-rank")
 
 
