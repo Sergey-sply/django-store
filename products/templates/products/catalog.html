@@ -45,6 +45,14 @@
             </form>
         </div>
 
+        {% if request.GET.q %}
+            <h3 class="mt-4">Результаты поиска по запросу {{ request.GET.q }}</h3>
+        {% if not products %}
+            <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+            <h2 class="mt-4">По запросу ничего не найдено</h2>
+        {% endif %}
+        {% endif %}
+
         {% for product in products %}
         <!-- Карта товара -->
         <div class="col-lg-4 col-md-6 p-4">
@@ -98,6 +106,7 @@
 
     </div>
     <!-- Пагинация -->
+    {% if products %}
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center my-4">
             <div class="custom-shadow d-flex">
@@ -105,17 +114,17 @@
 
                     <a class="page-link" href="
                     {% if products.has_previous %}?{% change_params page=products.previous_page_number %}{% else %}#{% endif %}">Назад</a>
-
+                    
                 </li>
-
+                
                 {% for page in products.paginator.page_range %}
-                    {% if page >= products.number|add:-2 and page <= products.number|add:2 %}
-                        <li class="page-item">
-                            <a class="page-link {% if products.number == page %}active{% endif %}" href="?{% change_params page=page %}">{{ page }}</a>
-                        </li>
-                    {% endif %}
+                {% if page >= products.number|add:-2 and page <= products.number|add:2 %}
+                <li class="page-item">
+                    <a class="page-link {% if products.number == page %}active{% endif %}" href="?{% change_params page=page %}">{{ page }}</a>
+                </li>
+                {% endif %}
                 {% endfor %}
-
+                
                 <li class="page-item {% if not products.has_next %}disabled{% endif %}">
                     <a class="page-link" href="
                     {% if products.has_next %}?{% change_params page=products.next_page_number %}{% else %}#{% endif %}">Вперед</a>
@@ -123,8 +132,9 @@
             </div>
         </ul>
     </nav>
-{% endblock  %}
-
+    {% endif %}
+    {% endblock  %}
+    
 {% block footer %}
     <footer class="py-4 bg-dark">
         <div class="container">
