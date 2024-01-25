@@ -9,15 +9,24 @@
                 <div class="col-md-5">
                     <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                         <h3 class="text-center mb-4">Профиль пользователя</h3>
-                        <form action="{% url "user:profile" %}" method="post">
+                        <form action="{% url "user:profile" %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-12 mb-3 text-center">
-                                    <img src="{% static "deps/images/baseavatar.jpg" %}"
+                                    {% if user.image %}
+                                        <img src="{{ user.image.url }}"
                                         alt="Аватар пользователя" class="img-fluid rounded-circle"
                                         style="max-width: 150px;">
+                                    {% else %}
+                                        <img src="{% static "deps/images/baseavatar.jpg" %}"
+                                        alt="Аватар пользователя" class="img-fluid rounded-circle"
+                                        style="max-width: 150px;">
+                                    {% endif %}
                                     <input type="file" class="form-control mt-3" id="id_image"
                                         name="image" accept="image/*">
+                                    {% if form.image.errors %}
+                                        <div class="alert alert-danger alert-dismissible fade show">{{ form.image.errors }}</div>
+                                    {% endif %}
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="id_first_name" class="form-label">Имя*</label>
