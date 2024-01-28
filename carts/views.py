@@ -3,9 +3,10 @@ from django.shortcuts import redirect, render
 from carts.models import Cart
 from products.models import Products
 
-def cart_add(request, product_slug):
+def cart_add(request):
     
-    product = Products.objects.get(slug=product_slug)
+    product_id = request.POST.get("product_id")
+    product = Products.objects.get(id=product_id)
 
     if request.user.is_authenticated:
         carts = Cart.objects.filter(user=request.user, product=product)
@@ -27,6 +28,6 @@ def cart_remove(request, cart_id):
 
     cart = Cart.objects.get(id=cart_id)
     cart.delete()
-    
+
     return redirect(request.META['HTTP_REFERER'])
 
